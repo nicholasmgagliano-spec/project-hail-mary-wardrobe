@@ -1,0 +1,464 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Project Hail Mary Wardrobe Archive</title>
+  <style>
+    :root {
+      --bg:#071018;
+      --bg2:#111d29;
+      --card:#101a25;
+      --card2:#0c141d;
+      --text:#edf5ff;
+      --muted:#a8b8ca;
+      --line:rgba(255,255,255,.10);
+      --gold:#ffd54a;
+      --sky:#7dd3fc;
+      --green:#7ee2a7;
+      --rose:#ffb4b4;
+      --shadow:0 20px 60px rgba(0,0,0,.34);
+    }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      margin:0;
+      color:var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(125,211,252,.14), transparent 32%),
+        radial-gradient(circle at 90% 8%, rgba(255,213,74,.12), transparent 26%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+    }
+    a { color:inherit; }
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 18px 56px;
+    }
+    .hero {
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    .hero:after {
+      content:"";
+      position:absolute;
+      right:-100px;
+      bottom:-120px;
+      width:300px;
+      height:300px;
+      border-radius:999px;
+      background: radial-gradient(circle, rgba(255,213,74,.22), transparent 65%);
+      pointer-events:none;
+    }
+    .eyebrow {
+      display:inline-block;
+      border:1px solid rgba(255,213,74,.25);
+      background:rgba(255,213,74,.10);
+      color:#ffe9a2;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+    h1 {
+      margin:0;
+      font-size: clamp(2rem, 4.2vw, 4.75rem);
+      line-height: 1.02;
+      max-width: 980px;
+    }
+    .sub {
+      margin:14px 0 0;
+      max-width: 980px;
+      color: var(--muted);
+      line-height: 1.72;
+      font-size: 1.04rem;
+    }
+    .hero-actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+    .hero-actions a, .hero-actions span {
+      text-decoration:none;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#eff7ff;
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.93rem;
+    }
+    .stats {
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap:14px;
+      margin-top:20px;
+    }
+    .stat {
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.16);
+      border-radius:20px;
+      padding:16px;
+    }
+    .stat .num {
+      display:block;
+      font-size:1.55rem;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .stat .lab {
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.5;
+    }
+    .controls {
+      margin-top:20px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:14px;
+      align-items:center;
+    }
+    .search {
+      width:100%;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:1rem;
+      outline:none;
+    }
+    .filters {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .filter-btn {
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:#eff7ff;
+      padding:12px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .filter-btn.active {
+      background:var(--gold);
+      border-color:transparent;
+      color:#0f1720;
+    }
+    .section-head {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:end;
+      margin:30px 0 14px;
+    }
+    .section-head h2 {
+      margin:0;
+      font-size:1.55rem;
+    }
+    .section-head p {
+      margin:0;
+      color:var(--muted);
+    }
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(295px,1fr));
+      gap:18px;
+    }
+    .card {
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, var(--card), var(--card2));
+      border-radius:26px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      min-height: 430px;
+    }
+    .media {
+      position:relative;
+      aspect-ratio:16/10;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(125,211,252,.22), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(255,213,74,.14), transparent 28%),
+        linear-gradient(135deg, #182636, #0d1520 70%);
+      border-bottom:1px solid var(--line);
+    }
+    .media img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .placeholder {
+      height:100%;
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .ph-top {
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .pill {
+      display:inline-block;
+      border:1px solid rgba(255,255,255,.15);
+      background:rgba(0,0,0,.25);
+      color:#eaf4ff;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:.76rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      backdrop-filter: blur(10px);
+    }
+    .big-title {
+      font-size:1.55rem;
+      font-weight:800;
+      line-height:1.05;
+      max-width:80%;
+      text-wrap:balance;
+    }
+    .media .confidence {
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:.76rem;
+      font-weight:800;
+      background:rgba(6,12,18,.72);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(10px);
+    }
+    .high { color:var(--green); }
+    .medium { color:var(--gold); }
+    .low { color:var(--rose); }
+    .body {
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      flex:1;
+    }
+    .meta-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .meta-chip {
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:.8rem;
+      color:#dce9f5;
+    }
+    .body h3 {
+      margin:0;
+      font-size:1.22rem;
+      line-height:1.24;
+    }
+    .note {
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+      min-height:84px;
+    }
+    .actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:auto;
+    }
+    .actions a {
+      text-decoration:none;
+      padding:11px 14px;
+      border-radius:14px;
+      font-weight:800;
+      background:var(--gold);
+      color:#111821;
+    }
+    .actions a.secondary {
+      background:transparent;
+      color:#f2f7fd;
+      border:1px solid var(--line);
+    }
+    .empty {
+      display:none;
+      border:1px dashed var(--line);
+      border-radius:24px;
+      padding:30px;
+      text-align:center;
+      color:var(--muted);
+      background:rgba(255,255,255,.03);
+    }
+    footer {
+      margin-top:26px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
+      color:var(--muted);
+      line-height:1.65;
+      background:rgba(255,255,255,.03);
+    }
+    @media (max-width: 980px) {
+      .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .controls { grid-template-columns:1fr; }
+    }
+    @media (max-width: 620px) {
+      .stats { grid-template-columns: 1fr; }
+      .wrap { padding: 16px 12px 40px; }
+      .hero { padding: 20px; border-radius:24px; }
+      .card { min-height: unset; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Project Hail Mary fan wardrobe archive</div>
+      <h1>Ryan Gosling’s Ryland Grace shirts, sweaters, and yellow raincoat</h1>
+      <p class="sub">
+        This is the cleaned-up version. I used the Seek Ryland Grace collection as the backbone, then pulled in Spotern matches where they clearly existed.
+        The result is a sharper archive with filters, confidence labels, and direct buy or source links. I also kept your cat-and-bridge shirt as an explicit lead instead of pretending it is fully confirmed.
+      </p>
+      <div class="hero-actions">
+        <a href="https://seek-shop.com/collections/ryland-grace" target="_blank" rel="noreferrer">Open the Seek Ryland Grace collection</a>
+        <a href="https://www.spotern.com/en/media/65124/project-hail-mary" target="_blank" rel="noreferrer">Open the Spotern Project Hail Mary page</a>
+        <span>Use the filters below to isolate tees, knitwear, outerwear, or leads</span>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="num" id="countAll">0</span><span class="lab">total items in this build</span></div>
+        <div class="stat"><span class="num" id="countHigh">0</span><span class="lab">high-confidence matches</span></div>
+        <div class="stat"><span class="num" id="countTees">0</span><span class="lab">shirt and tee entries</span></div>
+        <div class="stat"><span class="num" id="countOuter">0</span><span class="lab">outerwear pieces including the yellow coat</span></div>
+      </div>
+    </section>
+
+    <div class="controls">
+      <input id="search" class="search" type="text" placeholder="Search by title, note, or evidence...">
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="tee">Tees</button>
+        <button class="filter-btn" data-filter="knit">Knitwear</button>
+        <button class="filter-btn" data-filter="outerwear">Outerwear</button>
+        <button class="filter-btn" data-filter="lead">Leads</button>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Archive</h2>
+      <p><span id="visibleCount">0</span> item(s) showing</p>
+    </div>
+
+    <section class="grid" id="grid"></section>
+    <div class="empty" id="empty">Nothing matched that filter. Try “all” or a different search term.</div>
+
+    <footer>
+      This page is intentionally opinionated. High means I found a stronger Seek and or Spotern trail. Medium means it is listed but I would want more corroboration.
+      Low means it is a lead worth keeping around, not something I would call confirmed. That is why the cat-plus-Golden-Gate shirt stays in here, but only as a lead.
+    </footer>
+  </div>
+
+  <script>
+    const items = [{"title": "Blood Milk Moon Graphic Tee", "category": "tee", "confidence": "high", "evidence": "Seek + Spotern", "price": "$22 on Seek", "image": "https://medias.spotern.com/spots/w640/523/523382-1751406686.jpg", "match_note": "Seek lists this as seen on Ryland Grace, and Spotern has a clean still for the yellow tee.", "buy_url": "https://seek-shop.com/products/dr-graces-blood-milk-moon-shirt-project-hail-mary", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/523382/yellow-t-shirt-of-ryland-grace-ryan-gosling-in-project-hail-mary"}, {"title": "Horse Shoe Bend Auto Club Shirt", "category": "tee", "confidence": "high", "evidence": "Seek + Spotern", "price": "$27 on Seek", "image": "https://medias.spotern.com/spots/w640/523/523383-1751406867.jpg", "match_note": "Seek and Spotern both surface this shirt as a Ryland Grace match.", "buy_url": "https://seek-shop.com/products/horse-shoe-bend-auto-club-shirt-project-hail-mary", "source_url": "https://www.spotern.com/en/media/65124/project-hail-mary"}, {"title": "I Had Potential Graphic Tee", "category": "tee", "confidence": "high", "evidence": "Seek + Spotern", "price": "Listed on Seek", "image": "", "match_note": "Listed by Seek as seen on Ryland Grace and marked a perfect match on Spotern.", "buy_url": "https://seek-shop.com/products/dr-graces-i-had-potential-shirt-project-hail-mary", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574871/i-had-potential-t-shirt-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary"}, {"title": "Periodic Table T-Shirt", "category": "tee", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern lists both a close-match and perfect-match periodic table tee for Ryland Grace.", "buy_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574869/periodic-table-t-shirt-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574869/periodic-table-t-shirt-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary"}, {"title": "Ah, Element of Surprise Graphic Tee", "category": "tee", "confidence": "medium", "evidence": "Seek", "price": "Listed on Seek", "image": "", "match_note": "Seek lists this tee as seen on Ryland Grace. I kept it below the Spotern-backed items in certainty.", "buy_url": "https://seek-shop.com/products/project-hail-mary-ah-element-of-surprise-shirt", "source_url": "https://seek-shop.com/products/project-hail-mary-ah-element-of-surprise-shirt"}, {"title": "Official CATS Logo T-Shirt", "category": "tee", "confidence": "medium", "evidence": "Seek", "price": "$20 on Seek", "image": "", "match_note": "Seek lists the CATS tee as seen on Ryland Grace.", "buy_url": "https://seek-shop.com/products/cats-musical-official-logo-t-shirt-andrew-lloyd-webber", "source_url": "https://seek-shop.com/products/cats-musical-official-logo-t-shirt-andrew-lloyd-webber"}, {"title": "Wolf Cardigan Knit Kit Sweater", "category": "knit", "confidence": "high", "evidence": "Seek + Spotern", "price": "$90 on Seek", "image": "", "match_note": "Seek lists the Mary Maxim wolf cardigan as seen on Ryland Grace, and Spotern also has wolf-cardigan entries.", "buy_url": "https://seek-shop.com/products/ryan-gosling-project-hail-mary-wolf-cardigan-knit-kit-cardigan-sweater", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574858/project-hail-mary-wolf-cardigan-worn-by-ryland-grace-ryan-gosling-as-seen-in-project-hail-mary"}, {"title": "Striped Sweater Quarter-Zip", "category": "knit", "confidence": "medium", "evidence": "Seek", "price": "$210 on Seek", "image": "", "match_note": "Seek lists this striped quarter-zip as seen on Ryland Grace.", "buy_url": "https://seek-shop.com/products/project-hail-mary-inspired-ryan-gosling-jacket-etsy", "source_url": "https://seek-shop.com/products/project-hail-mary-inspired-ryan-gosling-jacket-etsy"}, {"title": "Zipper Sweatshirt", "category": "knit", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern lists a zipper sweatshirt as a perfect match on Ryland Grace.", "buy_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574668/zipper-sweatshirt-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574668/zipper-sweatshirt-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary"}, {"title": "Striped Hoodie", "category": "knit", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern lists a striped hoodie as a perfect match for Ryland Grace.", "buy_url": "https://www.spotern.com/en/media/65124/project-hail-mary", "source_url": "https://www.spotern.com/en/media/65124/project-hail-mary"}, {"title": "Striped Sweatshirt", "category": "knit", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern separately lists a striped sweatshirt as a perfect match.", "buy_url": "https://www.spotern.com/en/media/65124/project-hail-mary", "source_url": "https://www.spotern.com/en/media/65124/project-hail-mary"}, {"title": "Yellow Rain Coat", "category": "outerwear", "confidence": "high", "evidence": "Seek", "price": "$90 on Seek", "image": "https://medias.spotern.com/spots/w360/574/574861-1774355242.webp", "match_note": "Seek says the exact film coat is not available and gives similar shop options, but this is the signature yellow outerwear look.", "buy_url": "https://seek-shop.com/products/ryan-gosling-yellow-raincoat-project-hail-mary", "source_url": "https://seek-shop.com/products/ryan-gosling-yellow-raincoat-project-hail-mary"}, {"title": "Yellow Jacket", "category": "outerwear", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern has multiple perfect-match yellow jacket or coat entries for Ryland Grace.", "buy_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574861/project-hail-mary-yellow-jacket-worn-by-ryland-grace-ryan-gosling-as-seen-in-project-hail-mary", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574861/project-hail-mary-yellow-jacket-worn-by-ryland-grace-ryan-gosling-as-seen-in-project-hail-mary"}, {"title": "White Jacket", "category": "outerwear", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern lists a white jacket as a perfect Ryland Grace match.", "buy_url": "https://www.spotern.com/en/media/65124/project-hail-mary", "source_url": "https://www.spotern.com/en/media/65124/project-hail-mary"}, {"title": "Grey Blazer", "category": "outerwear", "confidence": "high", "evidence": "Spotern", "price": "Spottern match page", "image": "", "match_note": "Spotern lists a grey blazer as a perfect Ryland Grace match.", "buy_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574669/grey-blazer-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary", "source_url": "https://www.spotern.com/en/spot/movie/project-hail-mary/574669/grey-blazer-worn-by-ryland-grace-ryan-gosling-in-project-hail-mary"}, {"title": "Cat + Golden Gate Bridge Tee", "category": "lead", "confidence": "low", "evidence": "User-noted lead", "price": "Needs a stronger public match", "image": "", "match_note": "I kept your cat-plus-bridge shirt as a lead, but I am flagging it clearly as unverified until a stronger source page shows up.", "buy_url": "https://seek-shop.com/collections/ryland-grace", "source_url": "https://seek-shop.com/collections/ryland-grace"}];
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+    const searchInput = document.getElementById("search");
+    const filterButtons = [...document.querySelectorAll(".filter-btn")];
+    let activeFilter = "all";
+
+    function cap(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function buildPlaceholder(item) {
+      return `
+        <div class="placeholder">
+          <div class="ph-top">
+            <span class="pill">${cap(item.category)}</span>
+            <span class="pill">${item.evidence}</span>
+          </div>
+          <div class="big-title">${item.title}</div>
+          <div class="pill">${item.price}</div>
+        </div>
+      `;
+    }
+
+    function render() {
+      const q = searchInput.value.trim().toLowerCase();
+      const filtered = items.filter(item => {
+        const text = `${item.title} ${item.match_note} ${item.evidence}`.toLowerCase();
+        const filterPass = activeFilter === "all" || item.category === activeFilter;
+        const searchPass = !q || text.includes(q);
+        return filterPass && searchPass;
+      });
+
+      grid.innerHTML = filtered.map(item => `
+        <article class="card">
+          <div class="media">
+            ${
+              item.image
+                ? `<img src="${item.image}" alt="${item.title}" loading="lazy">`
+                : buildPlaceholder(item)
+            }
+            <span class="confidence ${item.confidence}">${cap(item.confidence)} confidence</span>
+          </div>
+          <div class="body">
+            <div class="meta-row">
+              <span class="meta-chip">${cap(item.category)}</span>
+              <span class="meta-chip">${item.evidence}</span>
+              <span class="meta-chip">${item.price}</span>
+            </div>
+            <h3>${item.title}</h3>
+            <p class="note">${item.match_note}</p>
+            <div class="actions">
+              <a href="${item.buy_url}" target="_blank" rel="noreferrer">Buy / match</a>
+              <a class="secondary" href="${item.source_url}" target="_blank" rel="noreferrer">Open source</a>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      document.getElementById("visibleCount").textContent = filtered.length;
+      empty.style.display = filtered.length ? "none" : "block";
+    }
+
+    function updateStats() {
+      document.getElementById("countAll").textContent = items.length;
+      document.getElementById("countHigh").textContent = items.filter(x => x.confidence === "high").length;
+      document.getElementById("countTees").textContent = items.filter(x => x.category === "tee").length;
+      document.getElementById("countOuter").textContent = items.filter(x => x.category === "outerwear").length;
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        activeFilter = btn.dataset.filter;
+        render();
+      });
+    });
+
+    searchInput.addEventListener("input", render);
+    updateStats();
+    render();
+  </script>
+</body>
+</html>
